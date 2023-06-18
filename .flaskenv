@@ -1,0 +1,2 @@
+FLASK_APP=morgue.py
+FLASK_DEBUG=True

@@ -25,10 +25,10 @@ class Story(db.Model):
     def __repr__(self):
         return f'Story({self.headline})'
 
-@app.route('/')
-def home():
+@app.route('/index')
+def index():
     corpora = Corpus.query.all()
-    return render_template('home.html', corpora=corpora)
+    return render_template('index.html', corpora=corpora)
 
 @app.route('/corpus/create', methods=['GET', 'POST'])
 def create_corpus():
@@ -38,7 +38,7 @@ def create_corpus():
         corpus = Corpus(name=name, description=description)
         db.session.add(corpus)
         db.session.commit()
-        return redirect('/')
+        return redirect('/index')
     return render_template('create_corpus.html')
 
 @app.route('/corpus/<int:corpus_id>')
@@ -70,4 +70,7 @@ def delete_story(corpus_id, story_id):
     return redirect(url_for('view_corpus', corpus_id=corpus_id))
 
 if __name__ == '__main__':
+    with app.app_context():
+        if not os.path.exists('instance/corpora.db'):
+            db.create_all()
     app.run(debug=True)

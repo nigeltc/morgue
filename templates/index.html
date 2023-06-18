@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Corpora</h2>
+<ul>
+    {% for corpus in corpora %}
+    <li><a href="{{ url_for('view_corpus', corpus_id=corpus.id) }}">{{ corpus.name }}</a></li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('create_corpus') }}" class="btn btn-primary">Create Corpus</a>
+{% endblock %}
