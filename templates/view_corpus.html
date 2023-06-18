@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ corpus.name }} - Corpus</h2>
+<hr>
+<p>{{ corpus.description }}</p>
+<h2>Stories</h2>
+{% if stories %}
+<ul>
+    {% for story in stories %}
+    <li>
+        <h4>{{ story.headline }}</h4>
+        <p>{{ story.body }}</p>
+        <a href="{{ url_for('delete_story', corpus_id=corpus.id, story_id=story.id) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this story?')">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No stories found.</p>
+{% endif %}
+<hr>
+<h3>Create Story</h3>
+<form method="post" action="{{ url_for('create_story', corpus_id=corpus.id) }}" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="headline">Headline</label>
+        <input type="text" class="form-control" id="headline" name="headline" required>
+    </div>
+    <div class="form-group">
+        <label for="body">Body</label>
+        <textarea class="form-control" id="body" name="body" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+{% endblock %}

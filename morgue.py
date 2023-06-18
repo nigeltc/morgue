@@ -19,7 +19,7 @@ class Story(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     headline = db.Column(db.String(100), nullable=False)
     body = db.Column(db.Text, nullable=False)
-    filename = db.Column(db.String(50), unique=True, nullable=False)
+    filename = db.Column(db.String(50), nullable=False)
     corpus_id = db.Column(db.Integer, db.ForeignKey('corpus.id'), nullable=False)
 
     def __repr__(self):
@@ -53,16 +53,14 @@ def create_story(corpus_id):
     if request.method == 'POST':
         headline = request.form['headline']
         body = request.form['body']
-        file = request.files['file']
-        filename = file.filename
+        filename = ""
         story = Story(headline=headline, body=body, filename=filename, corpus_id=corpus.id)
         db.session.add(story)
         db.session.commit()
-        file.save(os.path.join(app.root_path, 'static', 'uploads', filename))
         return redirect(url_for('view_corpus', corpus_id=corpus.id))
     return render_template('create_story.html', corpus=corpus)
 
-@app.route('/corpus/<int:corpus_id>/story/<int:story_id>/delete', methods=['POST'])
+@app.route('/corpus/<int:corpus_id>/story/<int:story_id>/delete', methods=['GET', 'POST'])
 def delete_story(corpus_id, story_id):
     story = Story.query.get_or_404(story_id)
     db.session.delete(story)
